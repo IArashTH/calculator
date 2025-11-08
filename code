@@ -1,0 +1,128 @@
+import java.util.Scanner;
+
+/**
+ * Simple console calculator.
+ * Supports: addition, subtraction, multiplication, division with doubles.
+ *
+ * Usage:
+ *   javac Calculator.java
+ *   java Calculator
+ */
+public class Calculator {
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        System.out.println("Simple Calculator (type the number of the operation)");
+        boolean running = true;
+        while (running) {
+            printMenu();
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1":
+                    performOperation("Addition", (a, b) -> a + b);
+                    break;
+                case "2":
+                    performOperation("Subtraction", (a, b) -> a - b);
+                    break;
+                case "3":
+                    performOperation("Multiplication", (a, b) -> a * b);
+                    break;
+                case "4":
+                    performDivision();
+                    break;
+                case "5":
+                    System.out.println("Goodbye!");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a number from 1 to 5.");
+            }
+            System.out.println();
+        }
+    }
+
+    private static void printMenu() {
+        System.out.println("---------------");
+        System.out.println("1) Add");
+        System.out.println("2) Subtract");
+        System.out.println("3) Multiply");
+        System.out.println("4) Divide");
+        System.out.println("5) Exit");
+        System.out.print("Choose an operation: ");
+    }
+
+    private static void performOperation(String name, DoubleBinaryOp op) {
+        System.out.println(name);
+        Double a = readDouble("Enter the first number: ");
+        if (a == null) return;
+        Double b = readDouble("Enter the second number: ");
+        if (b == null) return;
+        double result = op.apply(a, b);
+        System.out.println("Result: " + result);
+    }
+
+    private static void performDivision() {
+        System.out.println("Division");
+        Double a = readDouble("Enter the dividend: ");
+        if (a == null) return;
+        Double b = readDouble("Enter the divisor: ");
+        if (b == null) return;
+        if (b == 0.0) {
+            System.out.println("Error: Division by zero is not allowed.");
+            return;
+        }
+        System.out.println("Result: " + (a / b));
+    }
+
+    private static Double readDouble(String prompt) {
+        System.out.print(prompt);
+        String line = scanner.nextLine().trim();
+        if (line.isEmpty()) {
+            System.out.println("No input provided. Operation cancelled.");
+            return null;
+        }
+        try {
+            return Double.parseDouble(line);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number: \"" + line + "\". Operation cancelled.");
+            return null;
+        }
+    }
+
+    @FunctionalInterface
+    private interface DoubleBinaryOp {
+        double apply(double a, double b);
+    }
+}
+````markdown name=README.md
+```markdown
+# Simple Java Calculator
+
+This is a tiny console-based calculator written in Java. It supports:
+- Addition
+- Subtraction
+- Multiplication
+- Division (with division-by-zero check)
+
+## Files
+- `Calculator.java` — main program.
+
+## Build & Run
+
+1. Compile:
+   javac Calculator.java
+
+2. Run:
+   java Calculator
+
+Example session:
+- Choose an operation by number (1–5).
+- Enter two numbers when prompted.
+- Result is printed to the console.
+
+## Possible improvements
+- Add a REPL-style expression parser (e.g., evaluate "3 + 4 * 2").
+- Add support for history, parentheses, or functions (sin, cos, etc).
+- Provide a GUI using Swing or JavaFX.
+
+Enjoy!
